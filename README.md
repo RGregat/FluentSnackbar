@@ -1,5 +1,5 @@
 # FluentSnackbar
-[![Release](https://jitpack.io/v/antonygolovin/fluentsnackbar.svg)](https://jitpack.io/#antonygolovin/fluentsnackbar)
+[![](https://jitpack.io/v/RGregat/fluentsnackbar.svg)](https://jitpack.io/#RGregat/fluentsnackbar)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-FluentSnackbar-green.svg?style=true)](https://android-arsenal.com/details/1/3757)
 
 Tiny library that uses Android Design Support Library and lets you create and show snackbars in a fluent manner. Contains queue feature. You can also download sample [apk](https://github.com/AntonyGolovin/FluentSnackbar/tree/master/fluentsnackbar-sample/sample.apk).
@@ -34,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_SHORT).show();
                     }
                 })
+                .setSnackbarCallbackListener(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        Toast.makeText(MainActivity.this, "Snackbar dismissed", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .show();
     }
 }
@@ -58,6 +65,6 @@ and then add this in your module `build.gradle`:
 
 ```gradle
 dependencies {
-    compile 'com.github.antonygolovin:fluentsnackbar:1.0.0'
+    implementation 'com.github.RGregat:fluentsnackbar:1.1.0''
 }
 ```
