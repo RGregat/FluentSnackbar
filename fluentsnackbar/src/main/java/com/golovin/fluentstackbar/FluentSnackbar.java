@@ -3,16 +3,19 @@ package com.golovin.fluentstackbar;
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+
 import com.golovin.fluentstackbar.helpers.ThreadHelper;
 import com.golovin.snackbarmanager.R;
+import com.google.android.material.snackbar.Snackbar;
 
 public final class FluentSnackbar {
     private final View mView;
@@ -43,12 +46,12 @@ public final class FluentSnackbar {
     }
 
     void showSnackbar(Builder builder) {
-        Snackbar snackbar = Snackbar.make(mView, builder.getText(), builder.getDuration());
-
+        final Snackbar snackbar = Snackbar.make(mView, builder.getText(), builder.getDuration());
+        snackbar.addCallback(builder.mSnackbarCallbackListener);
         View view = snackbar.getView();
         view.setBackgroundColor(builder.getBackgroundColor());
 
-        TextView textView = (TextView) view.findViewById(R.id.snackbar_text);
+        TextView textView = view.findViewById(R.id.snackbar_text);
         textView.setMaxLines(builder.getMaxLines());
         textView.setTextColor(builder.getTextColor());
 
@@ -72,7 +75,13 @@ public final class FluentSnackbar {
             });
         }
 
-        snackbar.show();
+        // This fix a case if you want the Snackbar to push up the fab/view instead of overlapping
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                snackbar.show();
+            }
+        }, 100); // the delay does the trick
     }
 
     public Builder create(@StringRes int text) {
@@ -101,6 +110,8 @@ public final class FluentSnackbar {
         private CharSequence mActionText;
 
         private View.OnClickListener mActionListener;
+
+        private Snackbar.Callback mSnackbarCallbackListener;
 
         @ColorInt
         private int mActionTextColor;
@@ -178,6 +189,11 @@ public final class FluentSnackbar {
 
         public Builder action(View.OnClickListener listener) {
             mActionListener = listener;
+            return this;
+        }
+
+        public Builder setSnackbarCallbackListener(Snackbar.Callback snackbarCallbackListener) {
+            this.mSnackbarCallbackListener = snackbarCallbackListener;
             return this;
         }
 

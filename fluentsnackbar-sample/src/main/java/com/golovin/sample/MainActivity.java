@@ -1,11 +1,13 @@
 package com.golovin.sample;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.golovin.fluentstackbar.FluentSnackbar;
+import com.google.android.material.snackbar.Snackbar;
 
 @SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
                 mFluentSnackbar.create("Important warning")
                         .warningBackgroundColor()
                         .important()
+                        .setSnackbarCallbackListener(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+                                Toast.makeText(MainActivity.this, "Snackbar dismissed", Toast.LENGTH_SHORT).show();
+                            }
+                        })
                         .show();
             }
         });
@@ -68,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setSnackbarCallbackListener(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+                                Toast.makeText(MainActivity.this, "Snackbar dismissed", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .show();
